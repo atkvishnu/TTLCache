@@ -55,9 +55,9 @@ func New(size int) (m *TTLCacheMap) {
  */
 func (m *TTLCacheMap) Set(key int, value int, timeToLife int) {
 	m.mutex.Lock()         
-	it, ok := m.cacheMap[key] 			                                        // check if key is in map (ok is bool) and assign to it (pointer to item) if it is in map or nil if not in map
-	if !ok {               				                                        // if not in map
-		it = &item{value: value} 		                                        // create new item with value
+	it, ok := m.cacheMap[key] 			                                // check if key is in map (ok is bool) and assign to it (pointer to item) if it is in map or nil if not in map
+	if !ok {               				                                // if not in map
+		it = &item{value: value} 		                                // create new item with value
 		m.cacheMap[key] = it        	                                        // add to map
 	}
 	it.lastAccess = time.Now().Unix() 	                                        // update last access time to current time in unix seconds
@@ -75,9 +75,9 @@ func (m *TTLCacheMap) Set(key int, value int, timeToLife int) {
  */
 func (m *TTLCacheMap) Get(key int) (output int) {
 	m.mutex.Lock()
-	if it, ok := m.cacheMap[key]; ok { 	  	                                    // if key is in map (ok is bool) and assign to it (pointer to item) if it is in map or nil if not in map
-		output = it.value                 	                                    // assign value to output
-		it.lastAccess = time.Now().Unix() 	                                    // update last access time to current time in unix seconds (int64)
+	if it, ok := m.cacheMap[key]; ok { 	  	                                // if key is in map (ok is bool) and assign to it (pointer to item) if it is in map or nil if not in map
+		output = it.value                 	                                // assign value to output
+		it.lastAccess = time.Now().Unix() 	                                // update last access time to current time in unix seconds (int64)
 	}
 	m.mutex.Unlock()
 	return
@@ -93,8 +93,8 @@ func (m *TTLCacheMap) Len() int {
 
 
 func main() {
-	m := New(1024)  						                                    // create new cache with size 1024 and assigned to m
-	timeToLife := 7 						                                    // time to live = 7 seconds
+	m := New(1024)  						                // create new cache with size 1024 and assigned to m
+	timeToLife := 7 						                // time to live = 7 seconds
 
 	// Setting Random Key-Value pairs
 	for i := 0; i < 100; i++ {
@@ -112,11 +112,11 @@ func main() {
 
 	// `goroutine` to delete expired items in map (seperate goroutine initiated)
 	go func() {
-		for now := range time.Tick(time.Second * 0.5) { 						// ticker to check every second (can manipulate the cleaning timer)
+		for now := range time.Tick(time.Second * 0.5) { 			// ticker to check every second (can manipulate the cleaning timer)
 			m.mutex.Lock()                    
-			for key, value := range m.cacheMap { 								// loop through map
-				if now.Unix()-value.lastAccess > int64(timeToLife) { 			// if last access time is greater than timeToLive
-					delete(m.cacheMap, key) 									// delete from map
+			for key, value := range m.cacheMap { 				// loop through map
+				if now.Unix()-value.lastAccess > int64(timeToLife) { 	// if last access time is greater than timeToLive
+					delete(m.cacheMap, key) 			// delete from map
 				}
 			}
 			m.mutex.Unlock()

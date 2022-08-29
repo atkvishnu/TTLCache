@@ -10,7 +10,7 @@ APPROACH:
 - Nodes of the Doubly Linked List have values such as Prev*, Key, Value, TTL, Next*
 - I did not use the `container/list` library.
 - I implemented the ADT doubly linked list with some methods like:  AddAtBeg(k, v, ttl), AddAtEnd(k, v, ttl), whatsAt(k),
-  DelAtBeg(), DelNode(k), DelLRU(), Count(), Display()
+  DelAtBeg(), DelNode(k), DelLRUNode(), Count(), Display()
 - The LRUCache functions works like this:
 	- Set(key, value, ttl): + Will check if key is present in hashmap.
 						    + If Key is present, do not add anything and return "key already present in map"
@@ -141,9 +141,9 @@ func (ll *Doubly) DeleteNode(k any) *Node {
 	return nil
 }
 
-// DelLRU Delete a node at the end of the doubly linked list
-// DelLRU later
-func (ll *Doubly) DelLRU() *Node {
+// DelLRUNode Delete a node at the end of the doubly linked list
+// DelLRUNode later
+func (ll *Doubly) DelLRUNode() *Node {
 	// no item
 	if ll.Head == nil {
 		return nil
@@ -228,7 +228,7 @@ func (cache *Cache) Set(k any, v any, ttl int64, maxSize int) any {
 			cache.cacheMap[k] = adr                     // add address of the new Node as value in hashmap
 			return "Node Added!"
 		} else { // if hashmap is full, then 	// eviction policy
-			deletedNode := cache.helperList.DelLRU()    // remove LRU (from back of DLL)
+			deletedNode := cache.helperList.DelLRUNode()    // remove LRU (from back of DLL)
 			delete(cache.cacheMap, deletedNode.Key)     // and delete K-V pair from hashmap
 			adr := cache.helperList.AddAtBeg(k, v, ttl) // add node in front of DLL
 			cache.cacheMap[k] = adr                     // add address of the new Node as value in hashmap

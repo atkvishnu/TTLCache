@@ -13,41 +13,10 @@ esac
 [ -z "$PS1" ] && return
 
 
-# ------------------------- distro detection -------------------------
-export DISTRO
-[[ $(uname -r) =~ Microsoft ]] && DISTRO=WSL2 #TODO distinguish WSL1
-
 
 # ----------------------- environment variables ----------------------
 #                           (also see envx)
 
-export USER="${USER:-$(whoami)}"
-export GITUSER="$USER"
-export REPOS="$HOME/Repos"
-export GHREPOS="$REPOS/github.com/$GITUSER"
-export DOTFILES="$GHREPOS/dot"
-export SCRIPTS="$DOTFILES/scripts"
-export SNIPPETS="$DOTFILES/snippets"
-export HELP_BROWSER=lynx
-export DESKTOP="$HOME/Desktop"
-export DOCUMENTS="$HOME/Documents"
-export DOWNLOADS="$HOME/Downloads"
-export TEMPLATES="$HOME/Templates"
-export PUBLIC="$HOME/Public"
-export PRIVATE="$HOME/Private"
-export PICTURES="$HOME/Pictures"
-export MUSIC="$HOME/Music"
-export VIDEOS="$HOME/Videos"
-export PDFS="$HOME/usb/pdfs"
-export VIRTUALMACHINES="$HOME/VirtualMachines"
-export WORKSPACES="$HOME/Workspaces" # container home dirs for mounting
-export ZETDIR="$GHREPOS/zet"
-export ZETTELCASTS="$VIDEOS/ZettelCasts"
-export CLIP_DIR="$VIDEOS/Clips"
-export CLIP_DATA="$GHREPOS/cmd-clip/data"
-export CLIP_VOLUME=0
-export CLIP_SCREEN=0
-export TERM=xterm-256color
 export HRULEWIDTH=73
 export EDITOR=vi
 export VISUAL=vi
@@ -62,26 +31,6 @@ export LESS_TERMCAP_so="[34m" # blue
 export LESS_TERMCAP_ue="" # "0m"
 export LESS_TERMCAP_us="[4m"  # underline
 
-
-# ------------------------------ cdpath ------------------------------
-
-export CDPATH=".:$GHREPOS:$DOTFILES:$REPOS:/media/$USER:$HOME"
-
-export GOPATH=$HOME/go
-
-LFCD="$GOPATH/src/github.com/gokcehan/lf/etc/lfcd.sh"  # source
-LFCD="/path/to/lfcd.sh"                                #  pre-built binary, make sure to use absolute path
-if [ -f "$LFCD" ]; then
-    source "$LFCD"
-fi
-
-source /root/bash-wakatime/bash-wakatime.sh
-
-export PAGER=bat
-
-
-# path variable manipulation
-export PATH="$PATH:$GOPATH/bin:/etc/lynx:/root/Repos/github.com/root/dot/scripts:/root/.cowsay/cowfiles"
 
 # ------------------------ bash shell options ------------------------
 
@@ -103,13 +52,6 @@ export HISTFILESIZE=10000
 
 set -o vi
 
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
@@ -174,48 +116,23 @@ PROMPT_COMMAND="__ps1"
 
 unset color_prompt force_color_prompt
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-fi
-
 # ------------------------------ aliases -----------------------------
 #      (use exec scripts instead, which work from vim and subprocs)
 
-alias cat='bat'
-alias find='fdfind'
-alias grep='grepall'
-alias path='echo "$PATH" \| tr ':' '\n''
 
-alias l='exa'
-alias la='exa -a'
-alias ls='exa --color=auto'
-alias ll='exa -lah'
+alias l='ls'
+alias la='ls -a'
+alias ls='ls --color=auto'
+alias ll='ls -lah'
 alias tree='tree -Csuh'
 
-alias h='function hdi(){ howdoi $* -c -n 2; }; hdi'
-alias hcook='function hcook(){ HOWDOI_URL=cooking.stackexchange.com howdoi $* ; }; hcook'
-alias '?'=duck
-alias '??'=google
-alias '???'=wiki
-alias 'time??'='now'
 
-alias 'cheat'='cht.sh'
-alias 'cheatcpp'='cht.sh --shell cpp'
+alias cdcode='cd C:\\Users\\atkum\\Code'
+alias cdkb='cd C:\\Users\\atkum\\Code\\KnowledgeBase'
+alias cdzet='cd C:\\Users\\atkum\\Code\\KnowledgeBase\\notes\\zettelkasten'
+alias cdnotes='cd C:\\Users\\atkum\\Code\\KnowledgeBase\\notes'
 
-
-alias dot='cd $DOTFILES'
-alias scripts='cd $SCRIPTS'
-alias snippets='cd $SNIPPETS'
-
-alias cdhome='cd /mnt/c/Users/atkum/Desktop/'
-
-alias cdcode='cd /mnt/c/Users/atkum/Code'
-alias cdkb='cd /mnt/c/Users/atkum/Code/KnowledgeBase'
-alias cdzet='cd /mnt/c/Users/atkum/Code/KnowledgeBase/notes/zettelkasten'
-alias cdnotes='cd /mnt/c/Users/atkum/Code/KnowledgeBase/notes'
-
-alias cdlib='cd /mnt/c/Users/atkum/Documents/BooksLibrary'
+alias cdlib='cd C:\\Users\\atkum\\Documents\\BooksLibrary'
 
 alias lynx='lynx -accept_all_cookies'
 
@@ -225,64 +142,8 @@ alias clear='printf "\e[H\e[2J"'
 alias cl='printf "\e[H\e[2J"'
 alias c='printf "\e[H\e[2J"'
 
-alias subl='/mnt/c/Program\ Files/Sublime\ Text/subl.exe'
-alias start='cmd.exe /C start'
-alias fs='lf'
 
-# Estimate file space usage to maximum depth
-alias du1="du -d 1"
-
-alias cp="spinner cp"
-alias mkcd='_mkcd(){ mkdir "$1"; cd "$1";}; _mkcd'
-
-eval "$(dircolors -p | \
-    sed 's/ 4[0-9];/ 01;/; s/;4[0-9];/;01;/g; s/;4[0-9] /;01 /' | \
-	    dircolors /dev/stdin)"
+alias subl='C:\\Program\ Files\\Sublime\ Text\\subl.exe'
+alias npp='C:\\Program\ Files\ \(x86\)\\Notepad++\\notepad++.exe'
 
 
-
-
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-
-
-
-
-
-envx() {
-  local envfile="${1:-"$HOME/.env"}"
-  [[ ! -e "$envfile" ]] && echo "$envfile not found" && return 1
-  while IFS= read -r line; do
-     name=${line%%=*}
-     value=${line#*=}
-     [[ -z "${name}" || $name =~ ^# ]] && continue
-     export "$name"="$value"
-  done < "$envfile"
-} && export -f envx
-
-[[ -e "$HOME/.env" ]] && envx "$HOME/.env"
-
-
-
-#-------------------------------------------------------------------
-# Cow-spoken fortunes every time you open a terminal
-function cowsayfortune {
-    NUMOFCOWS=`cowsay -l | tail -n +2 | wc -w`
-    WHICHCOW=$((RANDOM%$NUMOFCOWS+1))
-    THISCOW=`cowsay -l | tail -n +2 | sed -e 's/\ /\'$'\n/g' | sed $WHICHCOW'q;d'`
-
-    #echo "Selected cow: ${THISCOW}, from ${WHICHCOW}"
-    fortune | cowsay -f $THISCOW -W 100 | lolcat
-}
-
-alias rand='cowsayfortune'
-
-animals() {
-    figlet -f ANSI\ Regular.flf $@ | lolcat
-}
-
-figlet -f slant "rwxvishnu" | lolcat
-#------------------------------------------------------------------------

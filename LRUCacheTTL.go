@@ -268,7 +268,11 @@ func main() {
 		cache.Set(k, v, t, maxSize)
 	}
 
-	// goroutine
+	// fn `time.NewTicker()` makes a channel that sends a periodic message, and provides a way to stop it.
+    
+
+
+    // goroutine
 	go func() {
 		for now := range time.Tick(time.Second * 1) { // ticker to check every second (can manipulate the cleaning timer)
 			cache.mutex.Lock()

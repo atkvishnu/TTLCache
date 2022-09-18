@@ -5,26 +5,24 @@ TODO:
 
 APPROACH:
 
-- After a thorough reading on caches, I implemented a basic LRU cache using a hashmap and a doubly linked list.
-- Key in map is the key, but the Value in map is the address to the Node of the Doubly Linked List.
+- Implemented a basic LRU cache using a hashmap and a doubly linked list.
+- Key in map is the key, the Value in map is the address to the Node of the Doubly Linked List.
 - Nodes of the Doubly Linked List have values such as Prev*, Key, Value, TTL, Next*
-- I did not use the `container/list` library.
-- I implemented the ADT doubly linked list with some methods like:  AddAtBeg(k, v, ttl), AddAtEnd(k, v, ttl), whatsAt(k),
-  DelAtBeg(), DelNode(k), DelLRUNode(), Count(), Display()
+- Implemented a ADT doubly linked list with some methods like:  AddAtBeg(k, v, ttl), AddAtEnd(k, v, ttl), whatsAt(k), DelAtBeg(), DelNode(k), DelLRUNode(), Count(), Display(). Did not use the `container/list` library.
 - The LRUCache functions works like this:
 	- Set(key, value, ttl): + Will check if key is present in hashmap.
-						    + If Key is present, do not add anything and return "key already present in map"
-						    + If Key not present, then check if hashmap is empty for insertion (size check - edge case).
-						    + If Hashmap is empty, Push the Node in front of Doubly Linked List, and add the key and address of Node(as value) in hashmap.
-						    + If Hashmap is not empty, then remove the Least Recently Used (LRU) element from the back of the Doubly Linked List, and then add the new Node to the front of DLL and HashMap.
-							+ We do not have a eviction function as these 2 functions will help us comply with the LRU eviction policy.
-							+ This completes the 1st TODO ✔️
+				+ If Key is present, do not add anything and return "key already present in map"
+				+ If Key not present, then check if hashmap is empty for insertion (size check - edge case).
+				+ If Hashmap is empty, Push the Node in front of Doubly Linked List, and add the key and address of Node(as value) in hashmap.
+				+ If Hashmap is not empty, then remove the Least Recently Used (LRU) element from the back of the Doubly Linked List, and then add the new Node to the front of DLL and HashMap.
+				+ We do not have a eviction function as these 2 functions will help us comply with the LRU eviction policy.
+				+ This completes the 1st TODO ✔️
 	- Get(key) : + Will check if the key is present in HashMap.
-				 + If Key is not present, return "not found"
-				 + If Key is found, then Dereference the address which is stored in the value section of HashMap to obtain the values inside the Nodes, as we touched this Node therefore we need to delete it from it's place and put it in front of the DLL again, to comply with the LRU eviction policy.
-				 + Return the Value associated with key.
-				 + We don't need to check if the Key is expired or not because our Goroutine will be running every 1 Seconds which will take care of the expired Nodes.
-                 + This completes our 2nd TODO ✔
+		     + If Key is not present, return "not found"
+		     + If Key is found, then dereference the address which is stored in the value section of HashMap to obtain the values inside the Nodes, as we touched this Node therefore we need to delete it from it's place and put it in front of the DLL again, to comply with the LRU eviction policy.
+		     + Return the Value associated with key.
+       		     + We don't need to check if the Key is expired or not because our Goroutine will be running every 1 Seconds which will take care of the expired Nodes.
+                     + This completes our 2nd TODO ✔
 */
 
 package main
@@ -59,7 +57,7 @@ func NewDoubly() *Doubly {
 	return &Doubly{nil}
 }
 
-// AddAtBeg Add a node to the beginning of the doubly linked list
+// AddAtBeg adds a node to the beginning of the doubly linked list
 func (ll *Doubly) AddAtBeg(k any, v any, ttl int64) **Node {
 	n := NewNode(k, v, ttl)
 	n.Next = ll.Head
@@ -73,7 +71,7 @@ func (ll *Doubly) AddAtBeg(k any, v any, ttl int64) **Node {
 	return &ll.Head
 }
 
-// AddAtEnd Add a node at the end of the doubly linked list
+// AddAtEnd adds a node at the end of the doubly linked list
 func (ll *Doubly) AddAtEnd(k any, v any, ttl int64) {
 	n := NewNode(k, v, ttl)
 
@@ -89,9 +87,8 @@ func (ll *Doubly) AddAtEnd(k any, v any, ttl int64) {
 	n.Prev = cur
 }
 
-// AddAtEnd Add a node at the end of the doubly linked list
+// AddAtEnd adds a node at the end of the doubly linked list
 func (ll *Doubly) whatsAt(k any) *Node {
-
 	cur := ll.Head
 	for ; cur.Next != nil; cur = cur.Next {
 		if cur.Next.Key == k {
@@ -103,7 +100,7 @@ func (ll *Doubly) whatsAt(k any) *Node {
 	return nil
 }
 
-// DelAtBeg Delete the node at the beginning of the doubly linked list
+// DelAtBeg deletes the node at the beginning of the doubly linked list
 func (ll *Doubly) DelAtBeg() any {
 	if ll.Head == nil {
 		return -1

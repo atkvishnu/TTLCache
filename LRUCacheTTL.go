@@ -1,10 +1,5 @@
 /**
-TODO:
-1. evict() function
-2. Edge case of Get function, remove expired KV Pairs
-
 APPROACH:
-
 - Implemented a basic LRU cache using a hashmap and a doubly linked list.
 - Key in map is the key, the Value in map is the address to the Node of the Doubly Linked List.
 - Nodes of the Doubly Linked List have values such as Prev*, Key, Value, TTL, Next*

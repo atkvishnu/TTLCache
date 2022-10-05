@@ -215,15 +215,15 @@ func (cache *Cache) Set(k any, v any, ttl int64, maxSize int) any {
 	if present { // if key already present in map
 		return "Key is already present!"
 	} else {
-		if len(cache.cacheMap) < maxSize { // if hashmap is empty, then add in front of DLL
-			adr := cache.helperList.AddAtBeg(k, v, ttl) // add node in front of DLL
-			cache.cacheMap[k] = adr                     // add address of the new Node as value in hashmap
+		if len(cache.cacheMap) < maxSize {                     // if hashmap is empty, then add in front of DLL
+			adr := cache.helperList.AddAtBeg(k, v, ttl)    // add node in front of DLL
+			cache.cacheMap[k] = adr                        // add address of the new Node as value in hashmap
 			return "Node Added!"
-		} else { // if hashmap is full, then 	// eviction policy
-			deletedNode := cache.helperList.DelLRUNode()    // remove LRU (from back of DLL)
-			delete(cache.cacheMap, deletedNode.Key)     // and delete K-V pair from hashmap
-			adr := cache.helperList.AddAtBeg(k, v, ttl) // add node in front of DLL
-			cache.cacheMap[k] = adr                     // add address of the new Node as value in hashmap
+		} else {                                               // if hashmap is full, then 	// eviction policy
+			deletedNode := cache.helperList.DelLRUNode()   // remove LRU (from back of DLL)
+			delete(cache.cacheMap, deletedNode.Key)        // and delete K-V pair from hashmap
+			adr := cache.helperList.AddAtBeg(k, v, ttl)    // add node in front of DLL
+			cache.cacheMap[k] = adr                        // add address of the new Node as value in hashmap
 			return "Node Added after removing one node!"
 		}
 	}
@@ -234,12 +234,12 @@ func (cache *Cache) Get(key any) (value *Node, found bool) {
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
 
-	_, exists := cache.cacheMap[key] // check if key exists in hashmap
+	_, exists := cache.cacheMap[key]                               // check if key exists in hashmap
 	if !exists {
 		value = nil
 		found = false
 	} else { // if key found
-		nodeValue := cache.helperList.DeleteNode(key) // Delete that node and
+		nodeValue := cache.helperList.DeleteNode(key)          // Delete that node and
 		delete(cache.cacheMap, nodeValue.Key)
 		newTime := time.Now().Unix()                                                // we are touching the file, therefore when we add it again to the DLL we are refreshing the time
 		newAddr := cache.helperList.AddAtBeg(nodeValue.Key, nodeValue.Val, newTime) // Add it at the beginning of the DLL
@@ -269,7 +269,7 @@ func main() {
 
     // goroutine
 	go func() {
-		for now := range time.Tick(time.Second * 1) { // ticker to check every second (can manipulate the cleaning timer)
+		for now := range time.Tick(time.Second * 1) {                // ticker to check every second (can manipulate the cleaning timer)
 			cache.mutex.Lock()
 			ll := cache.helperList
 			for cur := ll.Head; cur.Next != nil; cur = cur.Next {
